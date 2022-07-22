@@ -46,8 +46,8 @@ def mainScript():
         
         newName = championName+"_Passif.png";
         downloadSpellImage(championData["passive"]["abilityIconPath"], newName)
-        constant.actualImg+= 5
-        mainGUI.updateTask(keyChampion, constant.actualImg)
+        constant.actualImg+= 8
+        mainGUI.updateTask("Download files for "+championName, constant.actualImg)
 
     for champion in championsPerso:
         championName = trimChampionName(champion["name"])
@@ -56,7 +56,7 @@ def mainScript():
             newName = championName+'_'+spellKey+".png";
             downloadSpellImage(spell["abilityIconPath"], newName) 
             constant.actualImg+= 1
-            mainGUI.updateTask(keyChampion, constant.actualImg)
+            mainGUI.updateTask("Download additional files for "+championName, constant.actualImg)
     
     mainGUI.window.destroy()
     exit()
