@@ -94,6 +94,7 @@ def download_image(url, file_path, file_name):
     else:
         with open( full_path, 'wb' ) as fo:
             fo.write( response.read() )
+            
             #print( 'Url saved as %s' % full_path )
         return True
 
