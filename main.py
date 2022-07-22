@@ -17,6 +17,7 @@ allImagesToDownload = othersAbilitiesCount + len(champions) * 5 + len(champions)
 
 mainGUI = GUI(allImagesToDownload)
 
+pool_sema = threading.Semaphore(value=5)
 
 def newThread():
     new_thread = threading.Thread(target=mainScript, daemon=True)
@@ -27,37 +28,55 @@ def newThread():
         mainGUI.window.update()
         sleep(0.4)
 
-def mainScript():
-    for keyChampion in champions:
-        print(constant.actualImg)
+def threadDownloadChamp(kC):
+    pool_sema.acquire()
+    actualChamp = champions[kC]
+    championName = trimChampionName(actualChamp["name"])
+    championData = getChampionDataById(actualChamp["key"])
+    
+    downloadIconImage(kC,version)
+    downloadSplashImage(kC)
+    downloadVerticalImage(kC)
+    
+    for spell in championData["spells"]:
+        spellKey = defineSpellKey(spell["spellKey"].upper())
+        newName = championName+'_'+spellKey+".png";
+        downloadSpellImage(spell["abilityIconPath"], newName)
+    
+    newName = championName+"_Passif.png";
+    downloadSpellImage(championData["passive"]["abilityIconPath"], newName)
+    constant.actualImg+= 8
+    mainGUI.updateTask("Download files for "+championName, constant.actualImg)
+    pool_sema.release()
+    
+def threadDownloadSpecificChamp(cham):
+    pool_sema.acquire()
+    championName = trimChampionName(cham["name"])
+    for spell in cham["spells"]:
+        spellKey = defineSpellKey(spell["spellKey"].upper())
+        newName = championName+'_'+spellKey+".png";
+        downloadSpellImage(spell["abilityIconPath"], newName) 
+        constant.actualImg+= 1
+        mainGUI.updateTask("Download additional files for "+championName, constant.actualImg)
+    pool_sema.release()
 
-        actualChamp = champions[keyChampion]
-        championName = trimChampionName(actualChamp["name"])
-        championData = getChampionDataById(actualChamp["key"])
-        
-        downloadIconImage(keyChampion,version)
-        downloadSplashImage(keyChampion)
-        downloadVerticalImage(keyChampion)
-        
-        for spell in championData["spells"]:
-            spellKey = defineSpellKey(spell["spellKey"].upper())
-            newName = championName+'_'+spellKey+".png";
-            downloadSpellImage(spell["abilityIconPath"], newName)
-        
-        newName = championName+"_Passif.png";
-        downloadSpellImage(championData["passive"]["abilityIconPath"], newName)
-        constant.actualImg+= 8
-        mainGUI.updateTask("Download files for "+championName, constant.actualImg)
+def mainScript():
+    threads = []
+   
+    for keyChampion in champions:
+        new_thread = threading.Thread(target=threadDownloadChamp, args=(keyChampion,))
+        # Start the thread
+        new_thread.start()
+        threads.append(new_thread)
 
     for champion in championsPerso:
-        championName = trimChampionName(champion["name"])
-        for spell in champion["spells"]:
-            spellKey = defineSpellKey(spell["spellKey"].upper())
-            newName = championName+'_'+spellKey+".png";
-            downloadSpellImage(spell["abilityIconPath"], newName) 
-            constant.actualImg+= 1
-            mainGUI.updateTask("Download additional files for "+championName, constant.actualImg)
+        new_thread = threading.Thread(target=threadDownloadSpecificChamp, args=(champion,))
+        # Start the thread
+        new_thread.start()
+        threads.append(new_thread)
     
+    for x in threads:
+        x.join()
     mainGUI.window.destroy()
     exit()
 
