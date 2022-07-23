@@ -1,6 +1,9 @@
 from asyncio.windows_events import NULL
 from tkinter import *
 from tkinter.ttk import *
+from tkinter import filedialog
+import os
+from pathlib import Path
 
 class GUI:
     def __init__(self):
@@ -22,26 +25,37 @@ class GUI:
         self.cb_spells.set(1)
         self.cb_champ_data.set(1)
         
-        self.b = 'A'
-
-        c1 = Checkbutton(self.window, text='Champions Icon',variable=self.cb_icon, onvalue=1, offvalue=0)
-        c2 = Checkbutton(self.window, text='Champions Splash',variable=self.cb_splash, onvalue=1, offvalue=0)
-        c3 = Checkbutton(self.window, text='Champions Vertical',variable=self.cb_vertical, onvalue=1, offvalue=0)
-        c4 = Checkbutton(self.window, text='Champions Spells',variable=self.cb_spells, onvalue=1, offvalue=0)
-        c5 = Checkbutton(self.window, text='Champions Data',variable=self.cb_champ_data, onvalue=1, offvalue=0)
+        self.b = NULL
         
-        c1.grid(row=1, column=1)
-        c2.grid(row=2, column=1)
-        c3.grid(row=3, column=1)
-        c4.grid(row=4, column=1)
-        c5.grid(row=1, column=2)
+        indic1 = Label(self.window,text="Choose directory where file download",font=("Arial", 16)).grid(row=0, column=1,columnspan=2)
 
-        self.bar = Progressbar(self.window,orient=HORIZONTAL,length=300)
-        self.bar.grid(row=6, column=1,columnspan=2)
+        self.folder_path = StringVar()
+        self.folder_path.set(Path.home() / "Pictures" / "lol_dl_images_data")
+        lbl1 = Label(self.window,textvariable=self.folder_path)
+        lbl1.grid(row=1, column=1)
+        button2 = Button(text="Browse", command=self.browse_button)
+        button2.grid(row=1, column=2)
+
+        c1 = Checkbutton(self.window, text='Champions Icon',variable=self.cb_icon, onvalue=1, offvalue=0, command=self.checkCheckboxs)
+        c2 = Checkbutton(self.window, text='Champions Splash',variable=self.cb_splash, onvalue=1, offvalue=0, command=self.checkCheckboxs)
+        c3 = Checkbutton(self.window, text='Champions Vertical',variable=self.cb_vertical, onvalue=1, offvalue=0, command=self.checkCheckboxs)
+        c4 = Checkbutton(self.window, text='Champions Spells',variable=self.cb_spells, onvalue=1, offvalue=0, command=self.checkCheckboxs)
+        c5 = Checkbutton(self.window, text='Champions Data',variable=self.cb_champ_data, onvalue=1, offvalue=0, command=self.checkCheckboxs)
+        
+        indic1 = Label(self.window,text="Select what ressources to download",font=("Arial", 16)).grid(row=2, column=1,columnspan=2)
+
+        c1.grid(row=3, column=1)
+        c2.grid(row=4, column=1)
+        c3.grid(row=5, column=1)
+        c4.grid(row=6, column=1)
+        c5.grid(row=3, column=2)
+
+        self.bar = Progressbar(self.window,orient=HORIZONTAL,length=400)
+        self.bar.grid(row=8, column=1,columnspan=2)
 
         
-        percentLabel = Label(self.window,textvariable=self.percent).grid(row=7, column=1,columnspan=2)
-        taskLabel = Label(self.window,textvariable=self.text).grid(row=8, column=1,columnspan=2)
+        percentLabel = Label(self.window,textvariable=self.percent).grid(row=9, column=1,columnspan=2)
+        taskLabel = Label(self.window,textvariable=self.text).grid(row=10, column=1,columnspan=2)
   
     def updateTask(self,strTask,actual):
         self.bar['value']=(actual/self.nbimage)*100
@@ -67,7 +81,17 @@ class GUI:
             case _:
                 return NULL
 
-       
+    def browse_button(self):
+        # Allow user to select a directory and store it in global var
+        # called folder_path
+        filename =  filedialog.askdirectory()
+        self.folder_path.set(filename)
+        print(filename)
         
        
-        
+    def checkCheckboxs(self):
+        a = self.cb_icon.get() + self.cb_splash.get() + self.cb_vertical.get() + self.cb_spells.get() + self.cb_champ_data.get()
+        if a == 0:
+            self.b["state"] = "disabled"
+        else:
+            self.b["state"] = "enabled"

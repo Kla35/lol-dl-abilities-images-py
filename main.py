@@ -104,7 +104,7 @@ def newThread():
         sleep(0.4)
 
 mainGUI.b = Button(mainGUI.window, text ="Launch download", command = newThread)
-mainGUI.b.grid(row=5, column=1,columnspan=2)
+mainGUI.b.grid(row=7, column=1,columnspan=2)
 
 mainGUI.window.protocol("WM_DELETE_WINDOW", on_closing)
 mainGUI.window.title("LoL DL Images & Data")

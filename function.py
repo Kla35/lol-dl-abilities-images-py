@@ -119,19 +119,19 @@ def downloadSpellImage(spellPath, fileName):
         trim = spellPath.split('/lol-game-data/assets/v1/champion-ability-icons/')
         imageURL = 'https://raw.communitydragon.org/latest/game/data/characters/qiyana/hud/icons2d/'+trim[1].lower()
     
-    download_image(imageURL, constant.SPELL_FOLDER, fileName)
+    download_image(imageURL, constant.folders['cb_spells'], fileName)
 
 def downloadIconImage(champName,version):
     imageURL = 'http://ddragon.leagueoflegends.com/cdn/'+version+'/img/champion/'+champName+'.png';
-    download_image(imageURL, constant.ICON_FOLDER, champName+'.jpg')
+    download_image(imageURL, constant.folders['cb_icon'], champName+'.jpg')
 
 def downloadSplashImage(champName):
     imageURL = 'https://ddragon.leagueoflegends.com/cdn/img/champion/splash/'+champName+'_0.jpg';
-    download_image(imageURL, constant.SPLASH_FOLDER, champName+'.jpg')
+    download_image(imageURL, constant.folders['cb_splash'], champName+'.jpg')
 
 def downloadVerticalImage(champName):
     imageURL = 'https://ddragon.leagueoflegends.com/cdn/img/champion/loading/'+champName+'_0.jpg';
-    download_image(imageURL, constant.VERTICAL_FOLDER, champName+'.jpg')
+    download_image(imageURL, constant.folders['cb_vertical'], champName+'.jpg')
 
 ######## GENERAL FUNCTION ###########
 
@@ -144,9 +144,11 @@ def getJSONData(url):
     
 def recreate_folders(mainGUI):
     foldersCb = ['cb_icon','cb_spells','cb_splash','cb_vertical']
-    folders = {'cb_icon': constant.ICON_FOLDER, 'cb_spells': constant.SPELL_FOLDER, 'cb_splash':constant.SPLASH_FOLDER, 'cb_vertical':constant.VERTICAL_FOLDER}
+    base_folder = mainGUI.folder_path.get()
+    
     for folderCb in foldersCb:
+        constant.folders = {'cb_icon': os.path.join(base_folder, 'championIcon'), 'cb_spells': os.path.join(base_folder, 'championSpell'), 'cb_splash': os.path.join(base_folder, 'championSplash'), 'cb_vertical': os.path.join(base_folder, 'championVertical')}
         if mainGUI.getCheckbox(folderCb).get() == 1:
-            folder = folders[folderCb]
+            folder = constant.folders[folderCb]
             shutil.rmtree(folder, ignore_errors=True)
             os.makedirs(folder)
