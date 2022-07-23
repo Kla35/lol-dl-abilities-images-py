@@ -17,13 +17,13 @@ class GUI:
         self.cb_splash = IntVar()
         self.cb_vertical = IntVar()
         self.cb_spells = IntVar()
-        self.cb_champ_data = IntVar()
+        #self.cb_champ_data = IntVar()
         
         self.cb_icon.set(1)
         self.cb_splash.set(1)
         self.cb_vertical.set(1)
         self.cb_spells.set(1)
-        self.cb_champ_data.set(1)
+        #self.cb_champ_data.set(1)
         
         self.b = NULL
         
@@ -40,15 +40,15 @@ class GUI:
         c2 = Checkbutton(self.window, text='Champions Splash',variable=self.cb_splash, onvalue=1, offvalue=0, command=self.checkCheckboxs)
         c3 = Checkbutton(self.window, text='Champions Vertical',variable=self.cb_vertical, onvalue=1, offvalue=0, command=self.checkCheckboxs)
         c4 = Checkbutton(self.window, text='Champions Spells',variable=self.cb_spells, onvalue=1, offvalue=0, command=self.checkCheckboxs)
-        c5 = Checkbutton(self.window, text='Champions Data',variable=self.cb_champ_data, onvalue=1, offvalue=0, command=self.checkCheckboxs)
+        #c5 = Checkbutton(self.window, text='Champions Data',variable=self.cb_champ_data, onvalue=1, offvalue=0, command=self.checkCheckboxs)
         
         indic1 = Label(self.window,text="Select what ressources to download",font=("Arial", 16)).grid(row=2, column=1,columnspan=2)
 
-        c1.grid(row=3, column=1)
-        c2.grid(row=4, column=1)
-        c3.grid(row=5, column=1)
-        c4.grid(row=6, column=1)
-        c5.grid(row=3, column=2)
+        c1.grid(row=3, column=1,columnspan=2)
+        c2.grid(row=4, column=1,columnspan=2)
+        c3.grid(row=5, column=1,columnspan=2)
+        c4.grid(row=6, column=1,columnspan=2)
+        #c5.grid(row=3, column=2)
 
         self.bar = Progressbar(self.window,orient=HORIZONTAL,length=400)
         self.bar.grid(row=8, column=1,columnspan=2)
@@ -90,7 +90,8 @@ class GUI:
         
        
     def checkCheckboxs(self):
-        a = self.cb_icon.get() + self.cb_splash.get() + self.cb_vertical.get() + self.cb_spells.get() + self.cb_champ_data.get()
+        #a = self.cb_icon.get() + self.cb_splash.get() + self.cb_vertical.get() + self.cb_spells.get() + self.cb_champ_data.get()
+        a = self.cb_icon.get() + self.cb_splash.get() + self.cb_vertical.get() + self.cb_spells.get()
         if a == 0:
             self.b["state"] = "disabled"
         else:
