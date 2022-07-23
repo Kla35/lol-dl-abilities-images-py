@@ -1,3 +1,4 @@
+from audioop import mul
 import os
 import constant
 import shutil
@@ -33,7 +34,17 @@ def countOthersAbilities(data):
         nbAbilities+= len(champ["spells"])
     return nbAbilities
 
+def countNbImagesToDownload(champions, championsPerso, mainGUI):
+    if mainGUI.cb_spells.get() == 1:
+        nbSpells = countOthersAbilities(championsPerso)+len(champions)*5
+    else:
+        nbSpells = 0
 
+    nbChampion = len(champions)
+    multiplicator = mainGUI.cb_splash.get() + mainGUI.cb_icon.get() + mainGUI.cb_vertical.get()
+    champImage = nbChampion * multiplicator
+
+    return champImage + nbSpells
 def trimChampionName(str):
     returnStr = str.replace("'","")
     returnStr = returnStr.replace(".","")
@@ -131,8 +142,11 @@ def getJSONData(url):
 
 
     
-def recreate_folders():
-    folders = [constant.ICON_FOLDER, constant.SPELL_FOLDER,constant.SPLASH_FOLDER,constant.VERTICAL_FOLDER]
-    for folder in folders:
-        shutil.rmtree(folder, ignore_errors=True)
-        os.makedirs(folder)
+def recreate_folders(mainGUI):
+    foldersCb = ['cb_icon','cb_spells','cb_splash','cb_vertical']
+    folders = {'cb_icon': constant.ICON_FOLDER, 'cb_spells': constant.SPELL_FOLDER, 'cb_splash':constant.SPLASH_FOLDER, 'cb_vertical':constant.VERTICAL_FOLDER}
+    for folderCb in foldersCb:
+        if mainGUI.getCheckbox(folderCb).get() == 1:
+            folder = folders[folderCb]
+            shutil.rmtree(folder, ignore_errors=True)
+            os.makedirs(folder)
