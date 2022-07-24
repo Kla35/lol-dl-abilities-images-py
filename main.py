@@ -1,4 +1,6 @@
 from concurrent.futures import thread
+
+from pip import main
 from function import *
 from GUI import *
 import constant
@@ -9,8 +11,10 @@ from tkinter.ttk import *
 
 # Get actual version of CDN
 version = getActualVersion()
-champions = getChampionsData(version)
+champions = getChampionsData()
 championsPerso = getChampionsSpellsSpecific()
+summoners = getSummonersData()
+items = getItemsData()
 
 theTHREAD = NULL
 
@@ -56,24 +60,62 @@ def threadDownloadSpecificChamp(cham):
             mainGUI.updateTask("Download additional files for "+championName, constant.actualImg)
     pool_sema.release()
 
+def threadDownloadSummoner(kS):
+    pool_sema.acquire()
+    summoner = summoners[kS]
+    downloadSummonerImage(summoner["image"]["full"],  remove_accents(trimChampionName(summoner["name"]))) 
+    constant.actualImg+= 1
+    mainGUI.updateTask("Download summoner "+summoner["name"], constant.actualImg)
+    pool_sema.release()
+
+def threadDownloadItem(kI):
+    pool_sema.acquire()
+    item = items[kI]
+    if "requiredChampion" in item:
+        imageName =  remove_accents(item["requiredChampion"]+kI)
+    else:
+        imageName =  remove_accents(trimChampionName(item["name"]))
+    downloadItemImage(item["image"]["full"], imageName) 
+    constant.actualImg+= 1
+    mainGUI.updateTask("Download item "+item["name"], constant.actualImg)
+    pool_sema.release()
+
 def mainScript():
     threads = []
     constant.actualImg = 0
     mainGUI.updateTask("Starting...", 0)
 
-    for keyChampion in champions:
-        new_thread = threading.Thread(target=threadDownloadChamp, args=(keyChampion,), daemon=True)
-        # Start the thread
-        new_thread.start()
-        
-        threads.append(new_thread)
-
-    for champion in championsPerso:
-        new_thread = threading.Thread(target=threadDownloadSpecificChamp, args=(champion,), daemon=True)
-        # Start the thread
-        new_thread.start()
-        threads.append(new_thread)
+    tChampStatus = mainGUI.cb_icon.get() + mainGUI.cb_splash.get() + mainGUI.cb_vertical.get() + mainGUI.cb_spells.get() 
+    if tChampStatus > 0 :
+        for keyChampion in champions:
+            new_thread = threading.Thread(target=threadDownloadChamp, args=(keyChampion,), daemon=True)
+            # Start the thread
+            new_thread.start()
+            
+            threads.append(new_thread)
     
+    if mainGUI.cb_spells.get() > 0 :
+        for champion in championsPerso:
+            new_thread = threading.Thread(target=threadDownloadSpecificChamp, args=(champion,), daemon=True)
+            # Start the thread
+            new_thread.start()
+            threads.append(new_thread)
+
+    if mainGUI.cb_summoners.get() == 1:
+        for summoner in summoners:
+            new_thread = threading.Thread(target=threadDownloadSummoner, args=(summoner,), daemon=True)
+            # Start the thread
+            new_thread.start()
+            threads.append(new_thread)
+
+    if mainGUI.cb_items.get() == 1:
+        for item in items:
+            new_thread = threading.Thread(target=threadDownloadItem, args=(item,), daemon=True)
+            # Start the thread
+            new_thread.start()
+            threads.append(new_thread)
+
+
     for x in threads:
         x.join()
     mainGUI.window.destroy()
@@ -90,7 +132,7 @@ def newThread():
     # Remove all old files from folders
     recreate_folders(mainGUI)
     # Count img for progress bar
-    allImagesToDownload = countNbImagesToDownload(champions, championsPerso,mainGUI)
+    allImagesToDownload = countNbImagesToDownload(champions, championsPerso, summoners, items, mainGUI)
     mainGUI.setTotalImage(allImagesToDownload)
     # Set the thread
     theTHREAD = threading.Thread(target=mainScript, daemon=True)
