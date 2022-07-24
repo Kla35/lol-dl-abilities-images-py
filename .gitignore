@@ -1,6 +1,10 @@
+Output/
+setup.iss
 championIcon/
 championSplash/
 championSpell/
 championVertical/
+summoners/
+items/
 .vscode/
 __pycache__/

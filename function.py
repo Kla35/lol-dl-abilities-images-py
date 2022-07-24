@@ -5,16 +5,17 @@ import shutil
 import urllib.request
 import json
 import constant
-import threading
+import unicodedata
 
 ######### DOWNLOAD DATA FUNCTION ##########
 
 def getActualVersion():
     versionJSON = getJSONData("https://ddragon.leagueoflegends.com/api/versions.json")
+    constant.version = versionJSON[0]
     return versionJSON[0]
 
-def getChampionsData(version):
-    championsJSON = getJSONData("https://ddragon.leagueoflegends.com/cdn/"+version+"/data/en_US/champion.json")
+def getChampionsData():
+    championsJSON = getJSONData("https://ddragon.leagueoflegends.com/cdn/"+constant.version+"/data/en_US/champion.json")
     return championsJSON["data"]
     
 def getChampionsSpellsSpecific():
@@ -26,6 +27,13 @@ def getChampionDataById(id):
     data = json.loads(urllib.request.urlopen(req).read())
     return data
 
+def getSummonersData():
+    summoners = getJSONData("https://ddragon.leagueoflegends.com/cdn/"+constant.version+"/data/fr_FR/summoner.json")
+    return summoners["data"]
+
+def getItemsData():
+    items = getJSONData("https://ddragon.leagueoflegends.com/cdn/"+constant.version+"/data/fr_FR/item.json")
+    return items["data"]
 ######### TREAT FUNCTION ############
 
 def countOthersAbilities(data):
@@ -34,17 +42,27 @@ def countOthersAbilities(data):
         nbAbilities+= len(champ["spells"])
     return nbAbilities
 
-def countNbImagesToDownload(champions, championsPerso, mainGUI):
+def countNbImagesToDownload(champions, championsPerso, summoners, items, mainGUI):
     if mainGUI.cb_spells.get() == 1:
         nbSpells = countOthersAbilities(championsPerso)+len(champions)*5
     else:
         nbSpells = 0
 
+    if mainGUI.cb_summoners.get() == 1:
+        nbSummoners = len(summoners)
+    else:
+        nbSummoners = 0
+    
+    if mainGUI.cb_items.get() == 1:
+        nbItems = len(items)
+    else:
+        nbItems = 0
+
     nbChampion = len(champions)
     multiplicator = mainGUI.cb_splash.get() + mainGUI.cb_icon.get() + mainGUI.cb_vertical.get()
     champImage = nbChampion * multiplicator
 
-    return champImage + nbSpells
+    return champImage + nbSpells + nbSummoners + nbItems
 def trimChampionName(str):
     returnStr = str.replace("'","")
     returnStr = returnStr.replace(".","")
@@ -133,6 +151,14 @@ def downloadVerticalImage(champName):
     imageURL = 'https://ddragon.leagueoflegends.com/cdn/img/champion/loading/'+champName+'_0.jpg';
     download_image(imageURL, constant.folders['cb_vertical'], champName+'.jpg')
 
+def downloadSummonerImage(summonerPath, summonerName):
+    imageURL = 'https://ddragon.leagueoflegends.com/cdn/'+constant.version+'/img/spell/'+summonerPath
+    download_image(imageURL, constant.folders['cb_summoners'], summonerName+'.jpg')
+
+def downloadItemImage(itemPath, itemName):
+    imageURL = 'https://ddragon.leagueoflegends.com/cdn/'+constant.version+'/img/item/'+itemPath
+    download_image(imageURL, constant.folders['cb_items'], itemName+'.png')
+
 ######## GENERAL FUNCTION ###########
 
 def getJSONData(url):
@@ -143,12 +169,15 @@ def getJSONData(url):
 
     
 def recreate_folders(mainGUI):
-    foldersCb = ['cb_icon','cb_spells','cb_splash','cb_vertical']
+    foldersCb = ['cb_icon','cb_spells','cb_splash','cb_vertical','cb_summoners','cb_items']
     base_folder = mainGUI.folder_path.get()
-    
+    constant.folders = {'cb_icon': os.path.join(base_folder, 'championIcon'), 'cb_spells': os.path.join(base_folder, 'championSpell'), 'cb_splash': os.path.join(base_folder, 'championSplash'), 'cb_vertical': os.path.join(base_folder, 'championVertical'), 'cb_summoners': os.path.join(base_folder, 'summoners'), 'cb_items': os.path.join(base_folder, 'items')}
     for folderCb in foldersCb:
-        constant.folders = {'cb_icon': os.path.join(base_folder, 'championIcon'), 'cb_spells': os.path.join(base_folder, 'championSpell'), 'cb_splash': os.path.join(base_folder, 'championSplash'), 'cb_vertical': os.path.join(base_folder, 'championVertical')}
         if mainGUI.getCheckbox(folderCb).get() == 1:
             folder = constant.folders[folderCb]
             shutil.rmtree(folder, ignore_errors=True)
             os.makedirs(folder)
+
+def remove_accents(input_str):
+    nfkd_form = unicodedata.normalize('NFKD', input_str)
+    return u"".join([c for c in nfkd_form if not unicodedata.combining(c)])

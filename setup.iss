@@ -2,7 +2,7 @@
 ; SEE THE DOCUMENTATION FOR DETAILS ON CREATING INNO SETUP SCRIPT FILES!
 
 #define MyAppName "LoL Dl Abilities Images Py"
-#define MyAppVersion "Beta 2.1.2"
+#define MyAppVersion "Beta 2.1.5"
 #define MyAppPublisher "Kla"
 #define MyAppURL "https://quenouillere.fr"
 #define MyAppExeName "main.exe"
