@@ -15,6 +15,7 @@ champions = getChampionsData()
 championsPerso = getChampionsSpellsSpecific()
 summoners = getSummonersData()
 items = getItemsData()
+itemsS14 = getItemsS14Data()
 
 theTHREAD = NULL
 
@@ -80,6 +81,13 @@ def threadDownloadItem(kI):
     mainGUI.updateTask("Download item "+item["name"], constant.actualImg)
     pool_sema.release()
 
+def threadDownloadItemS14(item):
+    pool_sema.acquire()
+    downloadItemS14Image(item) 
+    constant.actualImg+= 1
+    mainGUI.updateTask("Download item "+item, constant.actualImg)
+    pool_sema.release()
+
 def mainScript():
     threads = []
     constant.actualImg = 0
@@ -115,6 +123,13 @@ def mainScript():
             new_thread.start()
             threads.append(new_thread)
 
+    if mainGUI.cb_items_s14.get() == 1:
+        for item in itemsS14:
+            new_thread = threading.Thread(target=threadDownloadItemS14, args=(item,), daemon=True)
+            # Start the thread
+            new_thread.start()
+            threads.append(new_thread)
+
 
     for x in threads:
         x.join()
@@ -132,7 +147,7 @@ def newThread():
     # Remove all old files from folders
     recreate_folders(mainGUI)
     # Count img for progress bar
-    allImagesToDownload = countNbImagesToDownload(champions, championsPerso, summoners, items, mainGUI)
+    allImagesToDownload = countNbImagesToDownload(champions, championsPerso, summoners, items, itemsS14, mainGUI)
     mainGUI.setTotalImage(allImagesToDownload)
     # Set the thread
     theTHREAD = threading.Thread(target=mainScript, daemon=True)
