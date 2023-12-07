@@ -8,6 +8,7 @@ import threading
 from time import sleep
 from tkinter import *
 from tkinter.ttk import *
+import os
 
 # Get actual version of CDN
 version = getActualVersion()
@@ -163,7 +164,9 @@ def newThread():
 mainGUI.b = Button(mainGUI.window, text ="Launch download", command = newThread)
 mainGUI.b.grid(row=7, column=1,columnspan=2)
 
-mainGUI.window.iconbitmap('./aled.ico')
+
+basedir = os.path.dirname(__file__)
+mainGUI.window.iconbitmap(os.path.join(basedir, './aled.ico'))
 mainGUI.window.protocol("WM_DELETE_WINDOW", on_closing)
 mainGUI.window.title("LoL DL Images & Data")
 mainGUI.window.mainloop()
