@@ -1,4 +1,5 @@
-Output/
+Output/**
+build/**
 setup.iss
 championIcon/
 championSplash/
