@@ -16,7 +16,6 @@ champions = getChampionsData()
 championsPerso = getChampionsSpellsSpecific()
 summoners = getSummonersData()
 items = getItemsData()
-itemsS14 = getItemsS14Data()
 
 theTHREAD = NULL
 
@@ -82,13 +81,6 @@ def threadDownloadItem(kI):
     mainGUI.updateTask("Download item "+item["name"], constant.actualImg)
     pool_sema.release()
 
-def threadDownloadItemS14(item):
-    pool_sema.acquire()
-    downloadItemS14Image(item) 
-    constant.actualImg+= 1
-    mainGUI.updateTask("Download item "+item, constant.actualImg)
-    pool_sema.release()
-
 def mainScript():
     threads = []
     constant.actualImg = 0
@@ -124,14 +116,6 @@ def mainScript():
             new_thread.start()
             threads.append(new_thread)
 
-    if mainGUI.cb_items_s14.get() == 1:
-        for item in itemsS14:
-            new_thread = threading.Thread(target=threadDownloadItemS14, args=(item,), daemon=True)
-            # Start the thread
-            new_thread.start()
-            threads.append(new_thread)
-
-
     for x in threads:
         x.join()
     mainGUI.window.destroy()
@@ -148,7 +132,7 @@ def newThread():
     # Remove all old files from folders
     recreate_folders(mainGUI)
     # Count img for progress bar
-    allImagesToDownload = countNbImagesToDownload(champions, championsPerso, summoners, items, itemsS14, mainGUI)
+    allImagesToDownload = countNbImagesToDownload(champions, championsPerso, summoners, items, mainGUI)
     mainGUI.setTotalImage(allImagesToDownload)
     # Set the thread
     theTHREAD = threading.Thread(target=mainScript, daemon=True)
@@ -164,7 +148,8 @@ def newThread():
 mainGUI.b = Button(mainGUI.window, text ="Launch download", command = newThread)
 mainGUI.b.grid(row=7, column=1,columnspan=2)
 
-mainGUI.window.iconbitmap('./icon/icon.ico')
+basedir = os.path.dirname(__file__)
+mainGUI.window.iconbitmap(os.path.join(basedir, './icon/icon.ico'))
 mainGUI.window.protocol("WM_DELETE_WINDOW", on_closing)
 mainGUI.window.title("LoL DL Images & Data")
 mainGUI.window.mainloop()

@@ -36,23 +36,6 @@ def getSummonersData():
 def getItemsData():
     items = getJSONData("https://ddragon.leagueoflegends.com/cdn/"+constant.version+"/data/fr_FR/item.json")
     return items["data"]
-
-def getItemsS14Data():
-    url = "https://raw.communitydragon.org/pbe/plugins/rcp-be-lol-game-data/global/default/assets/items/icons2d/"
-    selector = "table#list td.link a"
-    # Obtenir le contenu de la page web
-    response = requests.get(url)
-    
-    if response.status_code == 200:
-        # Analyser le HTML de la page
-        soup = BeautifulSoup(response.content, 'html.parser')
-        elements = soup.select(selector)
-        href_list = [element.get('href') for element in elements[1:]] if elements else []
-        
-        return href_list
-    else:
-        print("Fail :", response.status_code)
-        return []
     
 ######### TREAT FUNCTION ############
 
@@ -62,7 +45,7 @@ def countOthersAbilities(data):
         nbAbilities+= len(champ["spells"])
     return nbAbilities
 
-def countNbImagesToDownload(champions, championsPerso, summoners, items, itemsS14, mainGUI):
+def countNbImagesToDownload(champions, championsPerso, summoners, items, mainGUI):
     if mainGUI.cb_spells.get() == 1:
         nbSpells = countOthersAbilities(championsPerso)+len(champions)*5
     else:
@@ -83,17 +66,11 @@ def countNbImagesToDownload(champions, championsPerso, summoners, items, itemsS1
     else:
         nbItems = 0
 
-    if mainGUI.cb_items_s14.get() == 1:
-        nbItemsS14 = len(itemsS14)
-    else:
-        nbItemsS14 = 0
-
-
     nbChampion = len(champions)
     multiplicator = mainGUI.cb_splash.get() + mainGUI.cb_icon.get() + mainGUI.cb_vertical.get()
     champImage = nbChampion * multiplicator
 
-    return champImage + nbSpells + nbSummoners + nbItems + nbItemsS14
+    return champImage + nbSpells + nbSummoners + nbItems
 def trimChampionName(str):
     returnStr = str.replace("'","")
     returnStr = returnStr.replace(".","")
@@ -190,10 +167,6 @@ def downloadItemImage(itemPath, itemName):
     imageURL = 'https://ddragon.leagueoflegends.com/cdn/'+constant.version+'/img/item/'+itemPath
     download_image(imageURL, constant.folders['cb_items'], itemName+'.png')
 
-def downloadItemS14Image(itemPath):
-    imageURL = 'https://raw.communitydragon.org/pbe/plugins/rcp-be-lol-game-data/global/default/assets/items/icons2d/'+itemPath
-    download_image(imageURL, constant.folders['cb_items_s14'], itemPath)
-
 ######## GENERAL FUNCTION ###########
 
 def getJSONData(url):
@@ -204,9 +177,9 @@ def getJSONData(url):
 
     
 def recreate_folders(mainGUI):
-    foldersCb = ['cb_icon','cb_spells','cb_splash','cb_vertical','cb_summoners','cb_items', 'cb_items_s14']
+    foldersCb = ['cb_icon','cb_spells','cb_splash','cb_vertical','cb_summoners','cb_items']
     base_folder = mainGUI.folder_path.get()
-    constant.folders = {'cb_icon': os.path.join(base_folder, 'championIcon'), 'cb_spells': os.path.join(base_folder, 'championSpell'), 'cb_splash': os.path.join(base_folder, 'championSplash'), 'cb_vertical': os.path.join(base_folder, 'championVertical'), 'cb_summoners': os.path.join(base_folder, 'summoners'), 'cb_items': os.path.join(base_folder, 'items'), 'cb_items_s14': os.path.join(base_folder, 'items_s14')}
+    constant.folders = {'cb_icon': os.path.join(base_folder, 'championIcon'), 'cb_spells': os.path.join(base_folder, 'championSpell'), 'cb_splash': os.path.join(base_folder, 'championSplash'), 'cb_vertical': os.path.join(base_folder, 'championVertical'), 'cb_summoners': os.path.join(base_folder, 'summoners'), 'cb_items': os.path.join(base_folder, 'items')}
     for folderCb in foldersCb:
         if mainGUI.getCheckbox(folderCb).get() == 1:
             folder = constant.folders[folderCb]
