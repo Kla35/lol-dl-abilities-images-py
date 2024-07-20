@@ -1003,27 +1003,27 @@
         "spells": [
             {
                 "spellKey": "q2",
-                "abilityIconPath": "/lol-game-data/assets/ASSETS/characters/pyke/hud/icons2d/qiyana_q2_blue.png"
+                "abilityIconPath": "/lol-game-data/assets/ASSETS/characters/qiyana/hud/icons2d/qiyana_q2_blue.png"
             },
             {
                 "spellKey": "q3",
-                "abilityIconPath": "/lol-game-data/assets/ASSETS/characters/pyke/hud/icons2d/qiyana_q2_green.png"
+                "abilityIconPath": "/lol-game-data/assets/ASSETS/characters/qiyana/hud/icons2d/qiyana_q2_green.png"
             },
             {
                 "spellKey": "q4",
-                "abilityIconPath": "/lol-game-data/assets/ASSETS/characters/pyke/hud/icons2d/qiyana_q2_red.png"
+                "abilityIconPath": "/lol-game-data/assets/ASSETS/characters/qiyana/hud/icons2d/qiyana_q2_red.png"
             },
             {
                 "spellKey": "w2",
-                "abilityIconPath": "/lol-game-data/assets/ASSETS/characters/pyke/hud/icons2d/qiyana_w2_blue.png"
+                "abilityIconPath": "/lol-game-data/assets/ASSETS/characters/qiyana/hud/icons2d/qiyana_w2_blue.png"
             },
             {
                 "spellKey": "w3",
-                "abilityIconPath": "/lol-game-data/assets/ASSETS/characters/pyke/hud/icons2d/qiyana_w2_green.png"
+                "abilityIconPath": "/lol-game-data/assets/ASSETS/characters/qiyana/hud/icons2d/qiyana_w2_green.png"
             },
             {
                 "spellKey": "w4",
-                "abilityIconPath": "/lol-game-data/assets/ASSETS/characters/pyke/hud/icons2d/qiyana_w2_red.png"
+                "abilityIconPath": "/lol-game-data/assets/ASSETS/characters/qiyana/hud/icons2d/qiyana_w2_red.png"
             }
         ]
     },
