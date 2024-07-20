@@ -21,7 +21,7 @@ def getChampionsData():
     return championsJSON["data"]
     
 def getChampionsSpellsSpecific():
-    otherAbilitesJSON = getJSONData("https://raw.githubusercontent.com/Kla35/lol-dl-abilities-images/main/othersabilities.json")
+    otherAbilitesJSON = getJSONData("https://raw.githubusercontent.com/Kla35/lol-dl-abilities-images-py/main/othersabilities.json")
     return otherAbilitesJSON
     
 def getChampionDataById(id):
