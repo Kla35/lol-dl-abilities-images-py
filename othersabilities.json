@@ -62,6 +62,16 @@
         ]
     },
     {
+        "id":12,
+        "name":"Ambessa",
+        "spells": [
+            {
+                "spellKey": "q2",
+                "abilityIconPath": "/lol-game-data/assets/ASSETS/characters/alistar/hud/icons2d/icon_ambessa_q2.domina.png"
+            }
+        ]
+    },
+    {
         "id":34,
         "name":"Anivia",
         "spells": [
@@ -1447,23 +1457,31 @@
         "spells": [
             {
                 "spellKey": "q2",
-                "abilityIconPath": "/lol-game-data/assets/ASSETS/characters/viktor/hud/icons2d/viktor_q2.png"
+                "abilityIconPath": "/lol-game-data/assets/ASSETS/characters/viktor/hud/icons2d/viktor_q2.viktorvgu.png"
+            },
+            {
+                "spellKey": "q3",
+                "abilityIconPath": "/lol-game-data/assets/ASSETS/characters/viktor/hud/icons2d/viktor_q_buff.viktorvgu.png"
             },
             {
                 "spellKey": "w2",
-                "abilityIconPath": "/lol-game-data/assets/ASSETS/characters/viktor/hud/icons2d/viktor_w2.png"
+                "abilityIconPath": "/lol-game-data/assets/ASSETS/characters/viktor/hud/icons2d/viktor_w2.viktorvgu.png"
             },
             {
                 "spellKey": "e2",
-                "abilityIconPath": "/lol-game-data/assets/ASSETS/characters/viktor/hud/icons2d/viktor_e2.png"
+                "abilityIconPath": "/lol-game-data/assets/ASSETS/characters/viktor/hud/icons2d/viktor_e2.viktorvgu.png"
             },
             {
                 "spellKey": "r2",
-                "abilityIconPath": "/lol-game-data/assets/ASSETS/characters/viktor/hud/icons2d/viktor_r2.png"
+                "abilityIconPath": "/lol-game-data/assets/ASSETS/characters/viktor/hud/icons2d/viktor_r2.viktorvgu.png"
             },
             {
                 "spellKey": "r3",
-                "abilityIconPath": "/lol-game-data/assets/ASSETS/characters/viktor/hud/icons2d/viktor_r_guide.png"
+                "abilityIconPath": "/lol-game-data/assets/ASSETS/characters/viktor/hud/icons2d/viktor_r_guide.viktorvgu.png"
+            },
+            {
+                "spellKey": "r4",
+                "abilityIconPath": "/lol-game-data/assets/ASSETS/characters/viktor/hud/icons2d/viktor_r_guide2.viktorvgu.png"
             }
         ]
     },
